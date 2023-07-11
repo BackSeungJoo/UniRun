@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameoverUI;
 
     // 게임 점수
-    public int score = 0;
+    public int score = 0; 
 
     // 게임 시작과 동시에 싱글턴을 구성
     private void Awake()

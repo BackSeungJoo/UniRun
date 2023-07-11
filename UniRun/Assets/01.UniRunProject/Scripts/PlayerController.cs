@@ -1,19 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject normalPlayer;
+    public GameObject bigPlayer;
+
     public AudioClip deathClip;         // 사망시 재생할 오디오 클립
     public float jumpForce = 700f;      // 점프 힘
 
-    public int jumpCount = 0;          // 누적 점프 횟수
-    private bool isGrounded = false;    //바닥에 닿았는지 나타냄
+    public int jumpCount = 0;           // 누적 점프 횟수
+    private bool isGrounded = false;    // 바닥에 닿았는지 나타냄
     private bool isDead = false;        // 사망상태
 
     private Rigidbody2D playerRigidbody;    // 사용할 리지드 바디 컴포넌트
     private Animator animator;              // 사용할 애니메이터 컴포넌트
     private AudioSource playerAudio;        // 사용할 오디오 소스 컴포넌트
+
+    public bool isBig = default;         // 버섯을 먹어서 커진 상태인가?
+    public int life = 1;                 // 목숨
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +61,31 @@ public class PlayerController : MonoBehaviour
             playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
         }
 
+        // 슈퍼점프
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            // 리지드바디에 위쪽으로 힘주기
+            // playerRigidbody.velocity = new Vector2(0, jumpForce);
+            playerRigidbody.AddForce(new Vector2(0, jumpForce * 2));
+        }
+
+        // 슈퍼 낙하
+        if (Input.GetMouseButtonUp(1))
+        {
+            // 중력을 높힘.
+            playerRigidbody.gravityScale = 25f;
+        }
+
+        // 플레이어 위치 초기화
+        if (transform.position.x < -6)
+        {
+            transform.position += new Vector3(0.01f, 0, 0);
+            if (transform.position.x > -6)
+            {
+                transform.position -= new Vector3(0.01f, 0, 0);
+            }
+        }
+
         // 애니메이터의 Grounded 파라미터를 isGrounded 값으로 갱신
         animator.SetBool("isGround", isGrounded);
     }
@@ -82,7 +114,43 @@ public class PlayerController : MonoBehaviour
         // 데드존을 밟았을 때,
         if (collision.tag.Equals("Dead") && isDead == false)
         {
-            Die();
+            // 라이프가 2라면
+            if (life == 2)
+            {
+                // 충돌한 것 지우고,
+                collision.gameObject.SetActive(false);
+                // 큰 플레이어 프리팹도 지웁니다.
+                Destroy(bigPlayer);
+                // 작은 플레이어 프리팹을 생성합니다.
+                PlayerController normal = Instantiate(normalPlayer, transform.position, Quaternion.identity).GetComponent<PlayerController>();
+                normal.isBig = false;
+            }
+
+            // 라이프를 1로 만듭니다.
+            life--;
+
+            // 라이프가 0이 되면
+            if (life <= 0)
+            {
+                // 죽습니다.
+                Die();
+            }
+        }
+
+        // 버섯을 먹었을 때,
+        if (collision.tag.Equals("Mushroom") && (isBig == false) && (life < 2))
+        {
+            Destroy(normalPlayer);
+
+            PlayerController big = Instantiate(bigPlayer, transform.position, Quaternion.identity).GetComponent<PlayerController>();
+            big.isBig = true;
+            big.life = 2;
+        }
+
+        // 깃털을 먹었을 때,
+        if (collision.tag.Equals("Feather"))
+        {
+            jumpCount = 0;
         }
     }
 
@@ -92,6 +160,7 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             jumpCount = 0;
+            playerRigidbody.gravityScale = 1f;
         }
     }
 

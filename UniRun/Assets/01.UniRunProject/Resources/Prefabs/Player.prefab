@@ -255,6 +255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1239bc00770bcd746839aedf9ee0f970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalPlayer: {fileID: 2871457313674261167}
+  bigPlayer: {fileID: 4957372045600793841, guid: 077ba5a541473824baec1d8c30c9b78e, type: 3}
   deathClip: {fileID: 0}
   jumpForce: 400
   jumpCount: 0

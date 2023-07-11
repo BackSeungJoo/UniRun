@@ -65,10 +65,11 @@ public class PlatformSpawner : MonoBehaviour
             // 사용할 현재 순번 발판 게임 오브젝트를 비활성화하고 즉시 다시 활성화
             // 이때 발판의 Platform 컴포넌트의 OnEnable 메서드가 실행됨.
             platforms[currentIndex].SetActive(false);
-            platforms[currentIndex].SetActive(true);
 
             // 현재 순번의 발판을 화면 오른쪽에 재배치
             platforms[currentIndex].transform.position = new Vector2(xPos, yPos);
+            platforms[currentIndex].SetActive(true);
+
             // 순번 넘기기
             currentIndex++;
 

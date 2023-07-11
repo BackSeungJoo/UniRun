@@ -8,6 +8,7 @@ TagManager:
   - Feather
   - Gem1
   - Gem2
+  - Mushroom
   layers:
   - Default
   - TransparentFX

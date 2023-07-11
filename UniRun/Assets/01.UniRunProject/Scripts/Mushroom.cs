@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Feather : MonoBehaviour
+public class Mushroom : MonoBehaviour
 {
-    PlayerController playerController;
-
     // Start is called before the first frame update
     void Start()
     {
-        playerController = FindObjectOfType<PlayerController>();
+        
     }
 
     // Update is called once per frame
@@ -20,9 +18,10 @@ public class Feather : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 플레이어가 깃털을 먹었을 때, 
+        // 플레이어가 젬2을 먹었을 때,
         if (collision.tag == "Player")
         {
+            GFunc.Log("클로버를 먹었다.");
             gameObject.SetActive(false);
         }
     }
