@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) { return; }
 
-        if (Input.GetMouseButtonDown(0) /*&& jumpCount < 2*/)
+        if (Input.GetMouseButtonDown(0) && jumpCount < 2)
         {
             // 점프 횟수 증가
             jumpCount++;
@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
             playerRigidbody.velocity = Vector2.zero;
 
             // 리지드바디에 위쪽으로 힘주기
+            // playerRigidbody.velocity = new Vector2(0, jumpForce);
             playerRigidbody.AddForce(new Vector2(0, jumpForce));
 
             // 오디오 소스 재생

@@ -63,4 +63,24 @@ public static partial class GFunc
         result += addVector;
         return result;
     }
+
+    // ! 컴포넌트가 유효한지 여부를 체크하는 함수
+    public static bool IsValid<T>(this T target) where T : Component
+    {
+        if (target == null || target == default) { return false; }
+        else { return true; }
+    }
+
+    // ! 리스트가 유효한지 여부를 체크하는 함수
+    public static bool IsValid<T>(this List<T> target)
+    {
+        // 리스트가 인스턴스화 되어있는지 체크하고
+        bool isInvalid = (target == null || target == default);
+        // 리스트의 엘리먼트가 제로인지 체크하고,
+        isInvalid = isInvalid || target.Count == 0;
+
+        // 쓸 수 있다고 판단하는 것.
+        if (target == null || target == default) { return false; }
+        else { return true; }
+    }
 }
