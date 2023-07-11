@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip deathClip;         // 사망시 재생할 오디오 클립
     public float jumpForce = 700f;      // 점프 힘
 
-    private int jumpCount = 0;          // 누적 점프 횟수
+    public int jumpCount = 0;          // 누적 점프 횟수
     private bool isGrounded = false;    //바닥에 닿았는지 나타냄
     private bool isDead = false;        // 사망상태
 
@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // 데드존을 밟았을 때,
         if (collision.tag.Equals("Dead") && isDead == false)
         {
             Die();

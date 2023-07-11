@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Dead
+  - Feather
+  - Gem1
+  - Gem2
   layers:
   - Default
   - TransparentFX

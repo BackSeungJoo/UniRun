@@ -5,8 +5,12 @@ using UnityEngine;
 // 발판으로서 필요한 동작을 담은 스크립트
 public class Platform : MonoBehaviour
 {
-    public GameObject[] obstacles;  // 장애물 오브젝트
-    private bool stepped = false;   // 플레이어 캐릭터가 밟았는가?
+    public GameObject[] items;          // 아이템 오브젝트
+    public GameObject[] obstacles;      // 장애물 오브젝트
+    private bool stepped = false;       // 플레이어 캐릭터가 밟았는가?
+
+    private int itemYes = default;  // 아이템 생성 여부 판단
+    private int whatItem = default; // 어떤 아이템 생성할 건지
 
     // 컴포넌트가 활성화될 때마다 매번 실행되는 메서드
     private void OnEnable()
@@ -27,6 +31,51 @@ public class Platform : MonoBehaviour
                 obstacles[i].SetActive(false);
             }
         }
+
+        // 랜덤 아이템 생성
+        items[0].SetActive(false);
+        items[1].SetActive(false);
+        items[2].SetActive(false);
+
+        // 아이템을 생성할건지 아닌지 여부 체크
+        itemYes = Random.Range(0, 5);
+
+        // 1이상이면 아이템을 생성합니다.
+        if (itemYes > 1)
+        {
+            // 생성했다면 어떤 아이템을 생성 할건지 체크 
+            whatItem = Random.Range(0, 3);
+            
+            // 0번 아이템, 깃털
+            if(whatItem == 0)
+            {
+                items[whatItem].SetActive(true);
+                items[1].SetActive(false);
+                items[2].SetActive(false);
+            }
+            // 1번 아이템, 젬1
+            else if (whatItem == 1)
+            {
+                items[whatItem].SetActive(true);
+                items[0].SetActive(false);
+                items[2].SetActive(false);
+            }
+
+            // 2번 아이템, 젬2
+            else
+            {
+                items[whatItem].SetActive(true);
+                items[0].SetActive(false);
+                items[1].SetActive(false);
+            }
+        }
+
+        // 아니라면 리턴
+        else
+        {
+            return;
+        }
+
     }
 
     // Start is called before the first frame update
