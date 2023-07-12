@@ -9,6 +9,7 @@ TagManager:
   - Gem1
   - Gem2
   - Mushroom
+  - Land
   layers:
   - Default
   - TransparentFX

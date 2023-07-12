@@ -259,4 +259,6 @@ MonoBehaviour:
   bigPlayer: {fileID: 4957372045600793841}
   deathClip: {fileID: 0}
   jumpForce: 400
-  jumpCount: 0
+  jumpCount: 2
+  isBig: 0
+  life: 1

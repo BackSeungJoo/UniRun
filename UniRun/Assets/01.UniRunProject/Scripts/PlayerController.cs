@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public GameObject bigPlayer;
 
     public AudioClip deathClip;         // 사망시 재생할 오디오 클립
-    public float jumpForce = 700f;      // 점프 힘
+    public float jumpForce = 400f;      // 점프 힘
 
     public int jumpCount = 0;           // 누적 점프 횟수
     private bool isGrounded = false;    // 바닥에 닿았는지 나타냄
@@ -39,27 +39,31 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) { return; }
 
-        if (Input.GetMouseButtonDown(0) && jumpCount < 2)
-        {
-            // 점프 횟수 증가
-            jumpCount++;
+        // LEGACY;
+        //if (Input.GetMouseButtonDown(0) && jumpCount < 2)
+        //{
+        //    // 점프 횟수 증가
+        //    jumpCount++;
 
-            // 점프 직전에 속도를 순간적으로 제로(0, 0)으로 변경
-            playerRigidbody.velocity = Vector2.zero;
+        //    // 점프 직전에 속도를 순간적으로 제로(0, 0)으로 변경
+        //    playerRigidbody.velocity = Vector2.zero;
 
-            // 리지드바디에 위쪽으로 힘주기
-            // playerRigidbody.velocity = new Vector2(0, jumpForce);
-            playerRigidbody.AddForce(new Vector2(0, jumpForce));
+        //    // 리지드바디에 위쪽으로 힘주기
+        //    // playerRigidbody.velocity = new Vector2(0, jumpForce);
+        //    playerRigidbody.AddForce(new Vector2(0, jumpForce));
 
-            // 오디오 소스 재생
-            playerAudio.Play();
-        }
-        else if (Input.GetMouseButtonUp(0) && playerRigidbody.velocity.y > 0)
-        {
-            // 마우스를 왼쪽버튼에서 손을 떼는 순간 && y속도의 값이 양수라면 (위로 상승 중)
-            // 현재 속도를 절반으로 변경
-            playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
-        }
+        //    // 오디오 소스 재생
+        //    playerAudio.Play();
+        //}
+        //else if (Input.GetMouseButtonUp(0) && playerRigidbody.velocity.y > 0)
+        //{
+        //    // 마우스를 왼쪽버튼에서 손을 떼는 순간 && y속도의 값이 양수라면 (위로 상승 중)
+        //    // 현재 속도를 절반으로 변경
+        //    playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
+        //}
+
+        //Jump();
+
 
         // 슈퍼점프
         if(Input.GetKeyDown(KeyCode.A))
@@ -88,6 +92,47 @@ public class PlayerController : MonoBehaviour
 
         // 애니메이터의 Grounded 파라미터를 isGrounded 값으로 갱신
         animator.SetBool("isGround", isGrounded);
+    }
+
+    // 모바일에서 버튼을 눌러 플레이어를 점프 시키게 하기 위한 함수
+    public void Jump()
+    {
+        if (jumpCount < 2)
+        {
+            // 점프 횟수 증가
+            jumpCount++;
+
+            // 점프 직전에 속도를 순간적으로 제로(0, 0)으로 변경
+            playerRigidbody.velocity = Vector2.zero;
+
+            // 리지드바디에 위쪽으로 힘주기
+            // playerRigidbody.velocity = new Vector2(0, jumpForce);
+            playerRigidbody.AddForce(new Vector2(0, jumpForce));
+
+            // 오디오 소스 재생
+            playerAudio.Play();
+        }
+        //else if (playerRigidbody.velocity.y > 0)
+        //{
+        //    // 마우스를 왼쪽버튼에서 손을 떼는 순간 && y속도의 값이 양수라면 (위로 상승 중)
+        //    // 현재 속도를 절반으로 변경
+        //    playerRigidbody.velocity = playerRigidbody.velocity * 0.5f;
+        //}
+    }
+
+    // 모바일 용 슈퍼점프
+    public void SuperJump()
+    {
+        // 리지드바디에 위쪽으로 힘주기
+        // playerRigidbody.velocity = new Vector2(0, jumpForce);
+        playerRigidbody.AddForce(new Vector2(0, jumpForce * 2));
+    }
+
+    // 모바일 용 착지
+    public void Land()
+    {
+        // 중력을 높힘.
+        playerRigidbody.gravityScale = 25f;
     }
 
     private void Die()
@@ -120,10 +165,10 @@ public class PlayerController : MonoBehaviour
                 // 충돌한 것 지우고,
                 collision.gameObject.SetActive(false);
                 // 큰 플레이어 프리팹도 지웁니다.
-                Destroy(bigPlayer);
+                bigPlayer.SetActive(false);
                 // 작은 플레이어 프리팹을 생성합니다.
-                PlayerController normal = Instantiate(normalPlayer, transform.position, Quaternion.identity).GetComponent<PlayerController>();
-                normal.isBig = false;
+                //PlayerController normal = Instantiate(normalPlayer, transform.position, Quaternion.identity).GetComponent<PlayerController>();
+                //normal.isBig = false;
             }
 
             // 라이프를 1로 만듭니다.
@@ -138,14 +183,16 @@ public class PlayerController : MonoBehaviour
         }
 
         // 버섯을 먹었을 때,
-        if (collision.tag.Equals("Mushroom") && (isBig == false) && (life < 2))
-        {
-            Destroy(normalPlayer);
+        // 크기를 프리팹으로 바꾸니까 오류 생겨서 일단 지워놓음.
+        //if (collision.tag.Equals("Mushroom") && (life < 2))
+        //{
+        //    bigPlayer.SetActive(true);
+        //    normalPlayer.SetActive(false);
 
-            PlayerController big = Instantiate(bigPlayer, transform.position, Quaternion.identity).GetComponent<PlayerController>();
-            big.isBig = true;
-            big.life = 2;
-        }
+        //    // PlayerController big = Instantiate(bigPlayer, transform.position, Quaternion.identity).GetComponent<PlayerController>();
+        //    //big.isBig = true;
+        //    //big.life = 2;
+        //}
 
         // 깃털을 먹었을 때,
         if (collision.tag.Equals("Feather"))
